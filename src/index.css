@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-pixel: "Press Start 2P", monospace;
+  --color-camp-green: #2d5a27;
+  --color-camp-green-light: #4a8c3f;
+  --color-camp-sky: #87ceeb;
+  --color-camp-sky-dark: #1a1a3e;
+  --color-camp-night: #0f0f2e;
+  --color-camp-fire: #ff6b35;
+  --color-camp-fire-yellow: #ffd700;
+  --color-camp-wood: #8b5e3c;
+  --color-camp-wood-dark: #5c3a1e;
+  --color-camp-tent: #e74c3c;
+  --color-camp-tent-dark: #c0392b;
+  --color-camp-water: #4a90d9;
+  --color-camp-water-light: #7ab8f5;
+  --color-camp-ground: #5d4e37;
+  --color-camp-ground-light: #8b7355;
+}
+
+body {
+  margin: 0;
+}
