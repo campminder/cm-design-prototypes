@@ -1,6 +1,97 @@
 import { useParams, Link } from 'react-router-dom'
+import { Suspense, lazy, useState } from 'react'
 import { designers } from '../data/designers'
 import PixelStars from '../components/PixelStars'
+
+function SetupGuide({ designerData }) {
+  const [open, setOpen] = useState(designerData.prototypes.length === 0)
+
+  return (
+    <div className="mb-8">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between border-2 border-camp-fire-yellow/15 bg-camp-night/40 px-6 py-4 hover:border-camp-fire-yellow/30 transition-colors"
+      >
+        <span className="font-pixel text-camp-fire text-[10px] tracking-wider">SETUP YOUR CAMPSITE</span>
+        <span className="font-pixel text-camp-fire-yellow/50 text-[10px]">{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div className="border-2 border-t-0 border-camp-fire-yellow/15 bg-camp-night/40 p-6 space-y-4">
+
+          {/* Pre-work */}
+          <p className="font-pixel text-camp-fire-yellow/60 text-[8px] tracking-widest mb-2">BEFORE YOU START — SET UP YOUR ACCOUNTS</p>
+          <div className="space-y-3 mb-6 pl-2 border-l-2 border-camp-fire-yellow/10">
+            <div>
+              <p className="font-pixel text-camp-fire-yellow text-[8px] mb-1">GITHUB</p>
+              <p className="font-pixel text-camp-fire-yellow/40 text-[8px] leading-relaxed">Erica will get your GitHub access set up — reach out to her to get started.</p>
+            </div>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow text-[8px] mb-1">CLAUDE</p>
+              <p className="font-pixel text-camp-fire-yellow/40 text-[8px] leading-relaxed">Ask <span className="text-camp-green-light">Elliot Himmelfarb</span> for access to Claude Code. You'll use it to scaffold and push your prototypes.</p>
+            </div>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow text-[8px] mb-1">VERCEL</p>
+              <p className="font-pixel text-camp-fire-yellow/40 text-[8px] leading-relaxed">Sign up at <span className="text-camp-green-light">vercel.com</span> using your <span className="text-camp-green-light">@campminder.com</span> email. During signup, connect your GitHub account when prompted — this lets Vercel detect your pushes and auto-deploy. No extra config needed after that.</p>
+            </div>
+          </div>
+
+          <p className="font-pixel text-camp-fire-yellow/60 text-[8px] tracking-widest mb-2">THEN — GET RUNNING LOCALLY</p>
+
+          <div className="flex gap-3">
+            <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">1.</span>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">CLONE THE REPO</p>
+              <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2">
+                <code className="text-camp-green-light text-[9px]">git clone https://github.com/campminder/cm-design-prototypes.git</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">2.</span>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">INSTALL & RUN</p>
+              <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
+                <code className="text-camp-green-light text-[9px] block">cd cm-design-prototypes</code>
+                <code className="text-camp-green-light text-[9px] block">npm install</code>
+                <code className="text-camp-green-light text-[9px] block">npm run dev</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">3.</span>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">ADD A PROTOTYPE WITH CLAUDE</p>
+              <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
+                <code className="text-camp-fire-yellow/50 text-[9px] block">// Open Claude Code in this repo and run:</code>
+                <code className="text-camp-green-light text-[9px] block">/new-prototype</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Claude will scaffold your files and register them automatically</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">4.</span>
+            <div>
+              <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">PUSH & SHARE</p>
+              <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
+                <code className="text-camp-fire-yellow/50 text-[9px] block">// Claude can also do this for you — just ask!</code>
+                <code className="text-camp-green-light text-[9px] block">git add .</code>
+                <code className="text-camp-green-light text-[9px] block">git commit -m "Add my prototype"</code>
+                <code className="text-camp-green-light text-[9px] block">git push</code>
+              </div>
+              <p className="font-pixel text-camp-fire-yellow/40 text-[8px] mt-2 leading-relaxed">
+                VERCEL AUTO-DEPLOYS ON PUSH TO MAIN
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function DesignerPage() {
   const { designer, prototype } = useParams()
@@ -19,8 +110,34 @@ export default function DesignerPage() {
     )
   }
 
-  // If a specific prototype route is hit, you can render it here.
-  // For now, show the designer's prototype gallery.
+  // If a specific prototype is requested, lazy-load and render it
+  if (prototype) {
+    const protoData = designerData.prototypes.find((p) => p.slug === prototype)
+    if (!protoData) {
+      return (
+        <div className="min-h-screen bg-camp-night flex items-center justify-center">
+          <div className="text-center">
+            <p className="font-pixel text-camp-fire text-sm mb-4">PROTOTYPE NOT FOUND</p>
+            <Link to={`/${designer}`} className="font-pixel text-camp-fire-yellow text-[10px] hover:underline">
+              ← BACK TO CAMPSITE
+            </Link>
+          </div>
+        </div>
+      )
+    }
+
+    const ProtoComponent = lazy(() => import(`./${designer}/${protoData.component}/index.jsx`))
+
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen bg-camp-night flex items-center justify-center">
+          <p className="font-pixel text-camp-fire-yellow text-[10px] animate-pulse">LOADING...</p>
+        </div>
+      }>
+        <ProtoComponent />
+      </Suspense>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-camp-night overflow-hidden relative">
@@ -49,69 +166,13 @@ export default function DesignerPage() {
 
         {/* Prototypes */}
         <div className="w-full max-w-3xl px-6 py-8">
-          {/* Setup Guide */}
-          <div className="mb-8 border-2 border-camp-fire-yellow/15 bg-camp-night/40 p-6">
-            <h3 className="font-pixel text-camp-fire text-[10px] mb-5 tracking-wider">
-              SETUP YOUR CAMPSITE
-            </h3>
-
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">1.</span>
-                <div>
-                  <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">CLONE THE REPO</p>
-                  <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2">
-                    <code className="text-camp-green-light text-[9px]">git clone https://github.com/campminder/cm-design-prototypes.git</code>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">2.</span>
-                <div>
-                  <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">INSTALL & RUN</p>
-                  <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
-                    <code className="text-camp-green-light text-[9px] block">cd cm-design-prototypes</code>
-                    <code className="text-camp-green-light text-[9px] block">npm install</code>
-                    <code className="text-camp-green-light text-[9px] block">npm run dev</code>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">3.</span>
-                <div>
-                  <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">ADD A PROTOTYPE</p>
-                  <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
-                    <code className="text-camp-fire-yellow/50 text-[9px] block">// Create your component in:</code>
-                    <code className="text-camp-green-light text-[9px] block">src/pages/{designerData.slug}/MyPrototype.jsx</code>
-                    <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Then register it in:</code>
-                    <code className="text-camp-green-light text-[9px] block">src/data/designers.js</code>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">4.</span>
-                <div>
-                  <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">PUSH & DEPLOY</p>
-                  <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
-                    <code className="text-camp-green-light text-[9px] block">git add .</code>
-                    <code className="text-camp-green-light text-[9px] block">git commit -m "Add my prototype"</code>
-                    <code className="text-camp-green-light text-[9px] block">git push</code>
-                  </div>
-                  <p className="font-pixel text-camp-fire-yellow/40 text-[8px] mt-2 leading-relaxed">
-                    VERCEL AUTO-DEPLOYS ON PUSH TO MAIN
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Setup Guide — collapsible, open by default when no prototypes */}
+          <SetupGuide designerData={designerData} />
 
           {designerData.prototypes.length === 0 ? (
             <div className="text-center py-8">
               <p className="font-pixel text-camp-fire-yellow/40 text-[10px]">
-                NO PROTOTYPES YET — FOLLOW THE STEPS ABOVE TO GET STARTED
+                NO PROTOTYPES YET — ASK CLAUDE TO RUN /new-prototype TO GET STARTED
               </p>
             </div>
           ) : (
