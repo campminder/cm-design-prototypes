@@ -11,14 +11,11 @@
 
 export const designers = [
   {
-    name: 'Erica',
-    slug: 'erica',
-    color: 'camp-fire',
-    emoji: '🏕️',
-    prototypes: [
-      { name: 'Example', slug: 'example', component: 'Example', description: 'Sample prototype to get started' },
-      { name: 'Test', slug: 'test', component: 'Test', description: '' },
-    ],
+    name: 'Michael',
+    slug: 'michael',
+    color: 'camp-fire-yellow',
+    emoji: '👶',
+    prototypes: [],
   },
   {
     name: 'Mike',
@@ -35,10 +32,13 @@ export const designers = [
     prototypes: [],
   },
   {
-    name: 'Michael',
-    slug: 'michael',
-    color: 'camp-fire-yellow',
-    emoji: '👶',
-    prototypes: [],
+    name: 'Erica',
+    slug: 'erica',
+    color: 'camp-fire',
+    emoji: '🏕️',
+    prototypes: [
+      { name: 'Example', slug: 'example', component: 'Example', description: 'Sample prototype to get started' },
+      { name: 'Test', slug: 'test', component: 'Test', description: '' },
+    ],
   },
 ]
