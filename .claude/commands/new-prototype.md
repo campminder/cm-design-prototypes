@@ -25,8 +25,13 @@ Add a new prototype to this shared design prototype hub.
      { name: 'Prototype Name', slug: 'prototype-slug', component: 'FolderName', description: 'Optional description' }
      ```
 
-5. Confirm what was created and give them the local URL to preview:
+5. Restart the dev server so the new prototype is picked up:
+   - Kill any existing Vite process: `lsof -ti :5173 | xargs kill -9 2>/dev/null || true`
+   - Start it again in the background: `npm run dev`
+   - Wait 2 seconds for it to boot
+
+6. Confirm what was created and give them the local URL to preview:
    `http://localhost:5173/{designer-slug}/{prototype-slug}`
 
-6. Ask if they want to commit and push so the PM can review it on Vercel.
+7. Ask if they want to commit and push so the PM can review it on Vercel.
    If yes, stage only their new files and the designers.js change, commit with a clear message, and push to main.

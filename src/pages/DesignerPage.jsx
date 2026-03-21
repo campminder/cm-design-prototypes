@@ -55,6 +55,9 @@ function SetupGuide({ designerData }) {
               <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
                 <code className="text-camp-green-light text-[9px] block">cd cm-design-prototypes</code>
                 <code className="text-camp-green-light text-[9px] block">npm install</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Then start the server — run this in Claude Code:</code>
+                <code className="text-camp-green-light text-[9px] block">/start-server</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Or directly in your terminal:</code>
                 <code className="text-camp-green-light text-[9px] block">npm run dev</code>
               </div>
             </div>
@@ -75,12 +78,24 @@ function SetupGuide({ designerData }) {
           <div className="flex gap-3">
             <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">4.</span>
             <div>
+              <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">CONNECT FIGMA (ONE-TIME)</p>
+              <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
+                <code className="text-camp-fire-yellow/50 text-[9px] block">// Run this in Claude Code — you'll need a Figma personal access token:</code>
+                <code className="text-camp-green-light text-[9px] block">/setup-figma-mcp</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Claude will walk you through it</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <span className="font-pixel text-camp-fire-yellow text-[10px] shrink-0">5.</span>
+            <div>
               <p className="font-pixel text-camp-fire-yellow/70 text-[8px] leading-relaxed mb-1">PUSH & SHARE</p>
               <div className="bg-camp-night/80 border border-camp-fire-yellow/10 px-3 py-2 space-y-1">
-                <code className="text-camp-fire-yellow/50 text-[9px] block">// Claude can also do this for you — just ask!</code>
-                <code className="text-camp-green-light text-[9px] block">git add .</code>
-                <code className="text-camp-green-light text-[9px] block">git commit -m "Add my prototype"</code>
-                <code className="text-camp-green-light text-[9px] block">git push</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block">// Go live on Vercel (pulls latest first so you don't override anyone):</code>
+                <code className="text-camp-green-light text-[9px] block">/push-live</code>
+                <code className="text-camp-fire-yellow/50 text-[9px] block mt-2">// Just want PM feedback first? Get a private preview link:</code>
+                <code className="text-camp-green-light text-[9px] block">/push-branch</code>
               </div>
               <p className="font-pixel text-camp-fire-yellow/40 text-[8px] mt-2 leading-relaxed">
                 VERCEL AUTO-DEPLOYS ON PUSH TO MAIN
@@ -126,7 +141,9 @@ export default function DesignerPage() {
       )
     }
 
-    const ProtoComponent = lazy(() => import(`./${designer}/${protoData.component}/index.jsx`))
+    const modules = import.meta.glob('./*/*/index.jsx')
+    const key = `./${designer}/${protoData.component}/index.jsx`
+    const ProtoComponent = lazy(modules[key])
 
     return (
       <Suspense fallback={

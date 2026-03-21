@@ -17,6 +17,7 @@ export const designers = [
     emoji: '🏕️',
     prototypes: [
       { name: 'Example', slug: 'example', component: 'Example', description: 'Sample prototype to get started' },
+      { name: 'Test', slug: 'test', component: 'Test', description: '' },
     ],
   },
   {
