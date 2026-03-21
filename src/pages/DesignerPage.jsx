@@ -151,6 +151,17 @@ export default function DesignerPage() {
           <p className="font-pixel text-camp-fire-yellow text-[10px] animate-pulse">LOADING...</p>
         </div>
       }>
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center gap-4 bg-camp-night/90 border-b border-camp-fire-yellow/15 px-4 py-2">
+          <Link to="/" className="font-pixel text-camp-fire-yellow/50 text-[8px] hover:text-camp-fire-yellow transition-colors">
+            ⌂ BASE CAMP
+          </Link>
+          <span className="font-pixel text-camp-fire-yellow/20 text-[8px]">/</span>
+          <Link to={`/${designer}`} className="font-pixel text-camp-fire-yellow/50 text-[8px] hover:text-camp-fire-yellow transition-colors">
+            {designerData.emoji} {designerData.name.toUpperCase()}'S CAMPSITE
+          </Link>
+          <span className="font-pixel text-camp-fire-yellow/20 text-[8px]">/</span>
+          <span className="font-pixel text-camp-fire-yellow/40 text-[8px]">{protoData.name.toUpperCase()}</span>
+        </div>
         <ProtoComponent />
       </Suspense>
     )
