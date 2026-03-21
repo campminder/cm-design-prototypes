@@ -197,37 +197,63 @@ export default function DesignerPage() {
           {/* Setup Guide — collapsible, open by default when no prototypes */}
           <SetupGuide designerData={designerData} />
 
-          {designerData.prototypes.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="font-pixel text-camp-fire-yellow/40 text-[10px]">
-                NO PROTOTYPES YET — ASK CLAUDE TO RUN /new-prototype TO GET STARTED
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {designerData.prototypes.map((proto) => (
-                <Link
-                  key={proto.slug}
-                  to={`/${designerData.slug}/${proto.slug}`}
-                  className="group relative border-2 border-camp-fire-yellow/20 bg-camp-night/60 hover:bg-camp-night/80 hover:border-camp-fire-yellow/50 transition-all p-5 block"
-                >
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
-                  <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
-                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
-
-                  <h4 className="font-pixel text-camp-fire-yellow text-[10px] mb-1">
-                    {proto.name.toUpperCase()}
-                  </h4>
-                  {proto.description && (
-                    <p className="font-pixel text-camp-fire-yellow/40 text-[8px]">
-                      {proto.description}
+          {(() => {
+            const active = designerData.prototypes.filter((p) => !p.archived)
+            const archived = designerData.prototypes.filter((p) => p.archived)
+            return (
+              <>
+                {active.length === 0 && archived.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="font-pixel text-camp-fire-yellow/40 text-[10px]">
+                      NO PROTOTYPES YET — ASK CLAUDE TO RUN /new-prototype TO GET STARTED
                     </p>
-                  )}
-                </Link>
-              ))}
-            </div>
-          )}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4">
+                    {active.map((proto) => (
+                      <div key={proto.slug} className="group relative border-2 border-camp-fire-yellow/20 bg-camp-night/60 hover:bg-camp-night/80 hover:border-camp-fire-yellow/50 transition-all">
+                        <Link to={`/${designerData.slug}/${proto.slug}`} className="block p-5">
+                          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
+                          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
+                          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
+                          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-camp-fire-yellow/40 group-hover:border-camp-fire-yellow" />
+                          <h4 className="font-pixel text-camp-fire-yellow text-[10px] mb-1">
+                            {proto.name.toUpperCase()}
+                          </h4>
+                          {proto.description && (
+                            <p className="font-pixel text-camp-fire-yellow/40 text-[8px]">
+                              {proto.description}
+                            </p>
+                          )}
+                        </Link>
+                        <div className="px-5 pb-3 flex justify-end">
+                          <span className="font-pixel text-camp-fire-yellow/20 text-[7px] tracking-wider">
+                            TO ARCHIVE: RUN /archive-prototype IN CLAUDE CODE
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {archived.length > 0 && (
+                  <div className="mt-8">
+                    <p className="font-pixel text-camp-fire-yellow/30 text-[8px] tracking-widest mb-3">ARCHIVED</p>
+                    <div className="grid grid-cols-1 gap-3">
+                      {archived.map((proto) => (
+                        <div key={proto.slug} className="relative border border-camp-fire-yellow/10 bg-camp-night/30 p-4 opacity-50">
+                          <h4 className="font-pixel text-camp-fire-yellow/50 text-[10px] mb-1">{proto.name.toUpperCase()}</h4>
+                          {proto.description && (
+                            <p className="font-pixel text-camp-fire-yellow/20 text-[8px]">{proto.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )
+          })()}
         </div>
 
         {/* Footer */}
