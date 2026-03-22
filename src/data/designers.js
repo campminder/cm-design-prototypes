@@ -37,8 +37,7 @@ export const designers = [
     color: 'camp-fire',
     emoji: '🏕️',
     prototypes: [
-      { name: 'Example', slug: 'example', component: 'Example', description: 'Sample prototype to get started' },
-      { name: 'Test', slug: 'test', component: 'Test', description: '' },
+      { name: 'Auth0 Readiness', slug: 'auth0-readiness', component: 'Auth0Readiness', description: 'Caregiver authentication experience — from exploration to engineering handoff.' },
     ],
   },
 ]

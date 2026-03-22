@@ -1,0 +1,233 @@
+/* ── Full-screen email preview layout ── */
+.cm-email-fullscreen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-neutral-100);
+}
+
+.cm-email-fullscreen__tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-neutral-400);
+}
+
+.cm-email-fullscreen__back {
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+}
+
+/* ── Email type tabs ── */
+.cm-email-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  background: var(--color-neutral-200);
+  padding: var(--space-xs);
+  border-radius: var(--radius-lg);
+}
+
+.cm-email-tab {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cm-email-tab:hover {
+  color: var(--color-neutral-900);
+}
+
+.cm-email-tab--active {
+  background: var(--color-white);
+  color: var(--color-neutral-900);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Email preview container ── */
+.cm-email-preview {
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.cm-email-preview__header {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-neutral-200);
+  border-bottom: 1px solid var(--color-neutral-400);
+}
+
+.cm-email-preview__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.cm-email-preview__from {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-700);
+}
+
+.cm-email-preview__subject {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+}
+
+.cm-email-preview__body {
+  background: var(--color-white);
+}
+
+/* ── Email content ── */
+.cm-email__camp-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  color: #ffffff;
+}
+
+.cm-email__camp-banner-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xs);
+  flex-shrink: 0;
+}
+
+.cm-email__camp-banner-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cm-email__content {
+  padding: var(--space-xl);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-neutral-800);
+}
+
+.cm-email__content p {
+  margin: 0 0 var(--space-lg);
+}
+
+.cm-email__greeting {
+  font-weight: var(--font-weight-semibold);
+}
+
+.cm-email__cta {
+  display: inline-block;
+  padding: var(--space-md) var(--space-xxl);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.cm-email__muted {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+}
+
+.cm-email__footer {
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 1px solid var(--color-neutral-300);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  text-align: center;
+}
+
+.cm-email__footer-brand {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-700);
+}
+
+.cm-email__footer-links {
+  font-size: 11px;
+  color: var(--color-neutral-600);
+}
+
+/* ── Verification / reset code ── */
+.cm-email__code {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  padding: 8px 20px;
+  border: 2px dashed currentColor;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family-body);
+}
+
+/* ── Camper account email (wordmark style) ── */
+.cm-email__wordmark-header {
+  padding: var(--space-xxl) var(--space-xl) var(--space-lg);
+  text-align: center;
+}
+
+.cm-email__wordmark {
+  font-family: var(--font-family-title);
+  font-size: var(--font-size-xxl);
+  color: var(--color-neutral-900);
+  letter-spacing: 0.5px;
+}
+
+.cm-email__wordmark-divider {
+  margin: var(--space-lg) auto 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-neutral-400);
+}
+
+.cm-email__content--centered {
+  text-align: center;
+}
+
+.cm-email__heading {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+  margin: 0 0 var(--space-lg);
+}
+
+/* ── Guest invite email ── */
+.cm-email__list {
+  margin: 0 0 var(--space-lg);
+  padding-left: var(--space-xl);
+  font-size: var(--font-size-xs);
+  line-height: 1.8;
+}
+
+.cm-email__note {
+  background: var(--color-neutral-200);
+  border-left: 3px solid var(--color-neutral-500);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-neutral-800);
+}
+
+.cm-email__note-label {
+  display: block;
+  margin-bottom: var(--space-xs);
+}

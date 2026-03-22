@@ -1,0 +1,291 @@
+/* ── Auth index page ── */
+.cm-auth-index {
+  min-height: 100vh;
+  background: var(--color-page-background);
+  font-family: var(--font-family-body);
+  padding: var(--space-xxxl) var(--space-xl);
+}
+
+.cm-auth-index__container {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxl);
+}
+
+/* ── Header ── */
+.cm-auth-index__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cm-auth-index__logo-text {
+  font-family: var(--font-family-title);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-default);
+  letter-spacing: 0.05em;
+}
+
+.cm-auth-index__title {
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+  margin: var(--space-sm) 0 0;
+}
+
+.cm-auth-index__subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-neutral-700);
+  line-height: var(--line-height-normal);
+  margin: 0;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cm-auth-index__updated {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+  margin: var(--space-xs) 0 0;
+}
+
+/* ── Flow cards grid ── */
+.cm-auth-index__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+.cm-auth-index__grid--journeys {
+  grid-template-columns: 1fr;
+}
+
+.cm-auth-index__card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: var(--color-white);
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family-body);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cm-auth-index__card:hover {
+  border-color: var(--color-primary-default);
+  box-shadow: 0 2px 12px rgba(56, 15, 140, 0.12);
+}
+
+.cm-auth-index__card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  background: var(--color-purple-100);
+  color: var(--color-primary-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cm-auth-index__card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+/* ── "Proposal focuses on" + badges ── */
+.cm-auth-index__card-focus {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.cm-auth-index__card-focus-label {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-700);
+}
+
+.cm-auth-index__card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.cm-auth-index__card-tag {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-800);
+  background: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xl);
+  padding: 2px var(--space-sm);
+  white-space: nowrap;
+}
+
+.cm-auth-index__card-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-900);
+  margin: 0;
+}
+
+.cm-auth-index__card-problem {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-800);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+.cm-auth-index__card-journey {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-600);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.cm-auth-index__card-journey-label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-700);
+}
+
+.cm-auth-index__card-footnote {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-neutral-600);
+  line-height: var(--line-height-normal);
+  margin: calc(-1 * var(--space-xs)) 0 0;
+}
+
+.cm-auth-index__card-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-700);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+/* ── Card number badge ── */
+.cm-auth-index__card-number {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Section titles ── */
+.cm-auth-index__section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-800);
+  margin: 0 0 var(--space-lg);
+}
+
+/* ── Narrow grid for reference tools ── */
+.cm-auth-index__grid--narrow {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ── Brand toggle ── */
+.cm-auth-index__brand-toggle {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  margin-top: var(--space-sm);
+  align-self: center;
+}
+
+.cm-auth-index__brand-pill {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-body);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cm-auth-index__brand-pill:hover {
+  color: var(--color-neutral-900);
+}
+
+.cm-auth-index__brand-pill--active {
+  background: var(--color-white);
+  color: var(--color-neutral-900);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── "Needs Discussion" tag variant ── */
+.cm-auth-index__card-tag--discussion {
+  background: var(--color-orange-100);
+  border-color: var(--color-orange-300);
+  color: var(--color-orange-800);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ── Accordion ── */
+.cm-auth-index__accordion {
+  border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-xl);
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.cm-auth-index__accordion-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-xl);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family-body);
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.cm-auth-index__accordion-trigger:hover {
+  background: var(--color-neutral-200);
+}
+
+.cm-auth-index__accordion-chevron {
+  margin-left: auto;
+  font-size: var(--font-size-md);
+  color: var(--color-neutral-600);
+  transition: transform 0.2s ease;
+}
+
+.cm-auth-index__accordion-chevron--open {
+  transform: rotate(180deg);
+}
+
+.cm-auth-index__accordion-body {
+  padding: 0 var(--space-xl) var(--space-xl);
+}

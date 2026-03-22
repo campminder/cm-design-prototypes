@@ -1,0 +1,324 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { useNav } from '../NavContext';
+import { CircleCheck as CheckCircleOutlineIcon } from 'lucide-react';
+import { Info as InfoOutlinedIcon } from 'lucide-react';
+import { CampWebsite } from '../components/CampWebsite';
+import { AuthLayout } from '../components/AuthLayout';
+import { EmailPopup } from '../components/EmailPopup';
+import { ClickableCode } from '../components/GmailInbox';
+import { CampInTouchDashboard } from '../components/CampInTouchDashboard';
+import { PasswordRequirements } from '../components/PasswordRequirements';
+import { usePasswordValidation } from '../hooks/usePasswordValidation';
+import { TextInput } from '../components/TextInput';
+import { useStepNav } from '../hooks/useStepNav';
+import { StepNav } from '../components/StepNav';
+import { CAMP, CAMPMINDER_DEFAULT } from '../campBrand';
+import './EmailPreviewFlow.css';
+
+const STEPS = ['camp-website', 'email-entry', 'create-account', 'verify-code', 'loading', 'home'];
+
+const SCOPE_ANNOTATIONS = {
+  'camp-website': [],
+  'email-entry': [
+    'Input: Email address',
+    'Messaging: "Enter your email to get started"',
+    'Logic: Email lookup routes to signup (this flow) or password (returning)',
+  ],
+  'create-account': [
+    'Inputs: First name, Last name, Email (pre-filled), Password, Confirm password',
+    'Messaging: "We didn\'t find an account for [email]"',
+    'Validation: Password strength requirements',
+  ],
+  'verify-code': [
+    'Input: 6-digit verification code',
+    'Messaging: "We\'ve sent a verification code to [email]"',
+    'Note: Email template is not in scope — just this screen',
+  ],
+  'loading': [
+    'Auto sign-in after account creation',
+  ],
+  'home': [],
+};
+
+export const NewParentFlow = () => {
+  const { navigate, search } = useNav();
+  const searchParams = new URLSearchParams(search);
+  const brand = searchParams.get('brand') === 'default' ? CAMPMINDER_DEFAULT : CAMP;
+  const [step, setStep] = useState('camp-website');
+  const [email, setEmail] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [scopeActive, setScopeActive] = useState(false);
+
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailError = emailTouched && email.trim() && !isValidEmail
+    ? 'Please enter a valid email address'
+    : undefined;
+  const firstName = email.split('@')[0]?.split(/[._-]/)[0]?.replace(/^./, c => c.toUpperCase()) || '';
+  const [codeResent, setCodeResent] = useState(false);
+  const codeInputRef = useRef(null);
+  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { allValid } = usePasswordValidation(password, confirmPassword);
+  const stepNav = useStepNav(STEPS, step, setStep);
+
+  // Auto-open email popup when reaching verify-code step
+  useEffect(() => {
+    if (step === 'verify-code') {
+      const timer = setTimeout(() => setEmailOpen(true), 500);
+      return () => clearTimeout(timer);
+    }
+    if (step === 'loading') {
+      const timer = setTimeout(() => setStep('home'), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
+
+  const scopeToggleProps = {
+    scopeActive,
+    onScopeToggle: () => setScopeActive(!scopeActive),
+  };
+
+  if (step === 'camp-website') {
+    return (
+      <>
+        <CampWebsite onPortalClick={() => setStep('email-entry')} />
+        <StepNav {...stepNav} {...scopeToggleProps} />
+      </>
+    );
+  }
+
+  if (step === 'home') {
+    return (
+      <>
+        <CampInTouchDashboard
+          firstName={firstName || 'Jane'}
+          onHome={() => navigate('/auth')}
+        />
+        <StepNav {...stepNav} {...scopeToggleProps} />
+      </>
+    );
+  }
+
+  return (
+    <>
+    <AuthLayout
+      camp={brand}
+      scopeActive={scopeActive}
+      scopeAnnotations={SCOPE_ANNOTATIONS[step]}
+      onBack={
+        step === 'email-entry'
+          ? () => setStep('camp-website')
+          : undefined
+      }
+    >
+      {/* Step 1: Identifier-first entry */}
+      {step === 'email-entry' && (
+        <>
+          <h1 className="cm-auth-title">Welcome</h1>
+          <p className="cm-auth-subtitle">
+            Enter your email to get started.
+          </p>
+          <div className="cm-auth-form">
+            <TextInput
+              label="Email address *"
+              placeholder="yourname@email.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmailTouched(true)}
+              error={emailError}
+            />
+            <button
+              className="cm-auth-btn cm-auth-btn--primary"
+              disabled={!isValidEmail}
+              onClick={() => setStep('create-account')}
+            >
+              Continue
+            </button>
+          </div>
+          <div className="cm-auth-info-banner">
+            <InfoOutlinedIcon className="cm-auth-info-banner__icon" size={16} />
+            <span>
+              <strong>Identifier-first.</strong> The parent enters their email on one
+              screen — the system checks if an account exists and routes to login or
+              signup automatically. No more guessing which button to click.
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Step 2: Create account */}
+      {step === 'create-account' && (
+        <>
+          <h1 className="cm-auth-title">Create your {brand.name} account</h1>
+          <p className="cm-auth-notice">
+            We didn&rsquo;t find an account for <strong>{email}</strong>.
+            Fill in the details below to get started with {brand.name}.
+          </p>
+          <div className="cm-auth-form">
+            <TextInput label="First name" placeholder="Jane" />
+            <TextInput label="Last name" placeholder="Smith" />
+            <TextInput label="Email" value={email} disabled />
+            <TextInput
+              label="Password"
+              placeholder="Create a password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextInput
+              label="Confirm password"
+              placeholder="Re-enter your password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <PasswordRequirements password={password} confirmPassword={confirmPassword} />
+            <button
+              className="cm-auth-btn cm-auth-btn--primary"
+              disabled={!allValid}
+              onClick={() => setStep('verify-code')}
+            >
+              Create Account
+            </button>
+          </div>
+          <p className="cm-auth-signup-prompt">
+            <button className="cm-auth-link" onClick={() => setStep('email-entry')}>
+              Try another email
+            </button>
+          </p>
+          <div className="cm-auth-info-banner">
+            <InfoOutlinedIcon className="cm-auth-info-banner__icon" size={16} />
+            <span>
+              <strong>No account found.</strong> The system detected this email
+              doesn&rsquo;t have an account, so we skip straight to signup. No
+              guessing between &ldquo;Log In&rdquo; and &ldquo;Sign Up.&rdquo;
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Step 3: Verify email */}
+      {step === 'verify-code' && (
+        <>
+          <h1 className="cm-auth-title">Verify your email</h1>
+          <p className="cm-auth-subtitle">
+            We&rsquo;ve sent a verification code to:<br />
+            <strong>{email}</strong>
+          </p>
+
+          <div className="cm-auth-form">
+            <TextInput
+              label="Enter the 6-digit code *"
+              placeholder="000000"
+              ref={codeInputRef}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            <button
+              className="cm-auth-btn cm-auth-btn--primary"
+              disabled={!code.trim()}
+              onClick={() => setStep('loading')}
+            >
+              Verify &amp; Continue
+            </button>
+          </div>
+
+          <p className="cm-auth-signup-prompt">
+            <button className="cm-auth-link" onClick={() => setEmailOpen(true)}>
+              Check your email
+            </button>
+          </p>
+
+          <EmailPopup
+            open={emailOpen}
+            onClose={() => setEmailOpen(false)}
+            senderName={`${brand.name} via campminder`}
+            senderEmail="noreply@campminder.com"
+            subject={`Your verification code — ${brand.name}`}
+            accentColor={brand.accentColor}
+            verificationCode="523816"
+            onCodeCopied={() => {
+              codeInputRef.current?.focus();
+            }}
+          >
+            <div className="cm-email__camp-banner" style={{ backgroundColor: brand.accentColor }}>
+              {brand.logoUrl ? (
+                <img
+                  src={brand.logoUrl}
+                  alt={brand.name}
+                  style={{ width: 36, height: 36, borderRadius: '50%' }}
+                />
+              ) : (
+                <div className="cm-email__camp-banner-logo">{brand.initials}</div>
+              )}
+              <span className="cm-email__camp-banner-name">{brand.name}</span>
+            </div>
+            <div className="cm-email__content">
+              <p className="cm-email__greeting">Hi {firstName},</p>
+              <p>
+                Your verification code for <strong>{brand.name}</strong> on
+                campminder is:
+              </p>
+              <div style={{ textAlign: 'center', margin: '16px 0' }}>
+                <ClickableCode
+                  code="523816"
+                  accentColor={brand.accentColor}
+                  onCopied={() => {
+                    codeInputRef.current?.focus();
+                  }}
+                />
+              </div>
+              <p className="cm-email__muted">
+                This code expires in 10 minutes. If you didn&rsquo;t request
+                this, you can safely ignore this email.
+              </p>
+            </div>
+            <div className="cm-email__footer">
+              <span className="cm-email__footer-brand">Powered by campminder</span>
+              <span className="cm-email__footer-links">
+                Help Center &middot; Privacy Policy
+              </span>
+            </div>
+          </EmailPopup>
+
+          <p className="cm-auth-signup-prompt">
+            {codeResent ? (
+              <span style={{ color: 'var(--color-success)' }}>
+                <CheckCircleOutlineIcon size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+                Code resent to {email}
+              </span>
+            ) : (
+              <>
+                Didn&rsquo;t receive a code?{' '}
+                <button className="cm-auth-link" onClick={() => setCodeResent(true)}>
+                  Resend
+                </button>
+              </>
+            )}
+          </p>
+          <div className="cm-auth-info-banner">
+            <InfoOutlinedIcon className="cm-auth-info-banner__icon" size={16} />
+            <span>
+              <strong>Verify after account creation.</strong> The account is created
+              first, then we verify email ownership. Click &ldquo;Check your
+              email&rdquo; to see the branded verification email.
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Step 4: Loading transition */}
+      {step === 'loading' && (
+        <div className="cm-auth-loading">
+          <div className="cm-auth-loading__spinner" />
+          <p className="cm-auth-subtitle">Setting up your account&hellip;</p>
+        </div>
+      )}
+    </AuthLayout>
+    <StepNav {...stepNav} {...scopeToggleProps} />
+    </>
+  );
+};
